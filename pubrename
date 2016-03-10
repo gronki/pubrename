@@ -3,7 +3,7 @@
 set -e
 
 camelize() {
-    echo $(cat - | sed -r 's/^(.)/\ \1/; s/[\ ]+/ /g; s/\ ([a-zA-Z]+)/\ \L\u\1/g; s/^[\ ]+//g; s/[\ ]+$//g; s/\ /_/g')
+    echo $(cat - | sed -r 's/^(.)/\ \1/; s/[\ ]+/ /g; s/\ ([a-zA-Z\-]+)/\ \L\u\1/g; s/^[\ ]+//g; s/[\ ]+$//g; s/\ /_/g')
 }
 
 stripextrawhites() {
