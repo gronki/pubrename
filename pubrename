@@ -2,8 +2,10 @@
 
 set -e
 
-camelize() {
-    echo $(cat - | sed -r 's/^(.)/\ \1/; s/[\ ]+/ /g; s/\ ([a-zA-Z\-]+)/\ \L\u\1/g; s/^[\ ]+//g; s/[\ ]+$//g; s/\ /_/g')
+
+
+strtrim() {
+	echo $(cat - | perl -pe 's/^[\ ]+//g; s/[\ ]+$//g')
 }
 
 stripextrawhites() {
@@ -22,6 +24,14 @@ stripunsafe() {
 	echo $(cat - | perl -pe 's/[^A-Za-z0-9\ \-\?]//g' | stripextrawhites)
 }
 
+camelize_old() {
+    echo $(cat - | sed -r 's/^(.)/\ \1/; s/[\ ]+/ /g; s/\ ([a-zA-Z\-]+)/\ \L\u\1/g; s/^[\ ]+//g; s/[\ ]+$//g; s/\ /_/g')
+}
+
+camelize() {
+	echo $(cat - | perl -pe 's/^(.)/\ \1/; s/[\ ]([a-zA-Z\-]+)/\ \L\u\1/g; s/^[\ ]//')
+}
+
 if [[ $# -ne 1 ]]
 then
     echo "usage: pubrename [pdf name]"
@@ -33,11 +43,11 @@ pid=$!
 
 printf "PLEASE WRITE THE AUTHOR: "
 read author_raw
-author=$(echo "$author_raw" | stripunsafe | camelize)
+author=$(echo "$author_raw" | stripunsafe | strtrim | stripextrawhites | camelize | perl -pe 's/\ /_/g')
 
 printf "PLEASE PASTE THE TITLE (and press Ctrl+D):\n"
 title_raw=$(cat -)
-title=$(echo "$title_raw" | removenewlines | stripunsafe | camelize)
+title=$(echo "$title_raw" | removenewlines | stripunsafe | strtrim | stripextrawhites | camelize | perl -pe 's/\ /_/g')
 
 printf "PLEASE WRITE THE YEAR: "
 read year_raw
