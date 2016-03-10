@@ -38,7 +38,7 @@ then
     exit -1
 fi
 
-evince "$1" &
+evince "$1" 2>/dev/null &
 pid=$!
 
 printf "PLEASE WRITE THE AUTHOR: "
@@ -46,8 +46,13 @@ read author_raw
 author=$(echo "$author_raw" | stripunsafe | strtrim | stripextrawhites | camelize | perl -pe 's/\ /_/g')
 author2=$(echo "$author_raw" | stripunsafe | strtrim | stripextrawhites | camelize | perl -pe 's/\ /\,\ /g')
 
-printf "PLEASE PASTE THE TITLE (and press Ctrl+D):\n"
-title_raw=$(cat -)
+printf "PLEASE PASTE THE TITLE\n"
+TMPFILE=$(mktemp)
+sleep 1
+nano -m "$TMPFILE"
+title_raw=$(cat "$TMPFILE")
+rm "$TMPFILE"
+ 
 title=$(echo "$title_raw" | removenewlines | stripunsafe | strtrim | stripextrawhites | camelize | perl -pe 's/\ /_/g')
 title2=$(echo "$title_raw" | removenewlines | stripunsafe | strtrim | stripextrawhites | camelize)
 
