@@ -49,10 +49,10 @@ author2=$(echo "$author_raw" | stripunsafe | strtrim | stripextrawhites | cameli
 printf "PLEASE PASTE THE TITLE\n"
 TMPFILE=$(mktemp)
 sleep 1
-nano -m "$TMPFILE"
+nano "$TMPFILE"
 title_raw=$(cat "$TMPFILE")
 rm "$TMPFILE"
- 
+
 title=$(echo "$title_raw" | removenewlines | stripunsafe | strtrim | stripextrawhites | camelize | perl -pe 's/\ /_/g')
 title2=$(echo "$title_raw" | removenewlines | stripunsafe | strtrim | stripextrawhites | camelize)
 
