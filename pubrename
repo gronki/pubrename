@@ -6,12 +6,20 @@ camelize() {
     echo $(cat - | sed -r 's/^(.)/\ \1/; s/[\ ]+/ /g; s/\ ([a-zA-Z]+)/\ \L\u\1/g; s/^[\ ]+//g; s/[\ ]+$//g; s/\ /_/g')
 }
 
+stripextrawhites() {
+	echo $(cat - | perl -pe 's/[\ ]+/ /g')
+}
+
 removenewlines() {
     echo $(cat - | perl -pe 's/\n/\ /g')
 }
 
 stripwhites() {
     echo $(cat - | perl -pe 's/[\n\ ]//g')
+}
+
+stripunsafe() {
+	echo $(cat - | perl -pe 's/[^A-Za-z0-9\ \-\?]//g' | stripextrawhites)
 }
 
 if [[ $# -ne 1 ]]
@@ -25,16 +33,16 @@ pid=$!
 
 printf "PLEASE WRITE THE AUTHOR: "
 read author_raw
-author=$(echo "$author_raw" |  camelize)
+author=$(echo "$author_raw" | stripunsafe | camelize)
 
 printf "PLEASE PASTE THE TITLE (and press Ctrl+D):\n"
 title_raw=$(cat -)
-title=$(echo "$title_raw" | removenewlines | camelize)
+title=$(echo "$title_raw" | removenewlines | stripunsafe | camelize)
 
 printf "PLEASE WRITE THE YEAR: "
 read year_raw
 
-year=$(echo "$year_raw" | stripwhites)
+year=$(echo "$year_raw" | stripunsafe | stripwhites)
 fn_new="${year}__${author}__${title}.pdf"
 fn_new2="${author}__${year}__${title}.pdf"
 
