@@ -44,17 +44,19 @@ pid=$!
 printf "PLEASE WRITE THE AUTHOR: "
 read author_raw
 author=$(echo "$author_raw" | stripunsafe | strtrim | stripextrawhites | camelize | perl -pe 's/\ /_/g')
+author2=$(echo "$author_raw" | stripunsafe | strtrim | stripextrawhites | camelize | perl -pe 's/\ /\,\ /g')
 
 printf "PLEASE PASTE THE TITLE (and press Ctrl+D):\n"
 title_raw=$(cat -)
 title=$(echo "$title_raw" | removenewlines | stripunsafe | strtrim | stripextrawhites | camelize | perl -pe 's/\ /_/g')
+title2=$(echo "$title_raw" | removenewlines | stripunsafe | strtrim | stripextrawhites | camelize)
 
 printf "PLEASE WRITE THE YEAR: "
 read year_raw
 
 year=$(echo "$year_raw" | stripunsafe | stripwhites)
 fn_new="${year}__${author}__${title}.pdf"
-fn_new2="${author}__${year}__${title}.pdf"
+fn_new2="${author2} (${year}) ${title}.pdf"
 
 kill $pid && echo "killing evince"
 
