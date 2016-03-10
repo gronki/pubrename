@@ -46,6 +46,15 @@ read author_raw
 author=$(echo "$author_raw" | stripunsafe | strtrim | stripextrawhites | camelize | perl -pe 's/\ /_/g')
 author2=$(echo "$author_raw" | stripunsafe | strtrim | stripextrawhites | camelize | perl -pe 's/\ /\,\ /g')
 
+###
+
+printf "PLEASE WRITE THE YEAR: "
+read year_raw
+
+year=$(echo "$year_raw" | perl -pe 's/[^0-9]//g')
+
+###
+
 printf "PLEASE PASTE THE TITLE\n"
 TMPFILE=$(mktemp)
 sleep 1
@@ -56,10 +65,6 @@ rm "$TMPFILE"
 title=$(echo "$title_raw" | removenewlines | stripunsafe | strtrim | stripextrawhites | camelize | perl -pe 's/\ /_/g')
 title2=$(echo "$title_raw" | removenewlines | stripunsafe | strtrim | stripextrawhites | camelize)
 
-printf "PLEASE WRITE THE YEAR: "
-read year_raw
-
-year=$(echo "$year_raw" | stripunsafe | stripwhites)
 fn_new="${year}__${author}__${title}.pdf"
 fn_new2="${author2} (${year}) ${title2}.pdf"
 
