@@ -56,7 +56,7 @@ read year_raw
 
 year=$(echo "$year_raw" | stripunsafe | stripwhites)
 fn_new="${year}__${author}__${title}.pdf"
-fn_new2="${author2} (${year}) ${title}.pdf"
+fn_new2="${author2} (${year}) ${title2}.pdf"
 
 kill $pid && echo "killing evince"
 
